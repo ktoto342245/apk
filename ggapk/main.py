@@ -47,7 +47,7 @@ class LoveKittenWidget(FloatLayout):
 
         # Add text
         self.label = Label(
-            text="[b]Я очень сильно люблю своего котёнка![/b]",
+            text="[b]Я очень сильно \nлюблю своего котёнка![/b]",
             font_size='24sp',
             color=(1, 0.2, 0.4, 1),  # Bright pink text
             markup=True,
