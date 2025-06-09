@@ -1,131 +1,102 @@
 from kivy.app import App
-from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.widget import Widget
 from kivy.uix.label import Label
-from kivy.uix.image import Image
 from kivy.uix.button import Button
-from kivy.graphics import Color, Rectangle, Ellipse
+from kivy.uix.image import Image
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.animation import Animation
-from kivy.clock import Clock
-from kivy.metrics import dp
 from kivy.core.window import Window
+from kivy.graphics import Color, Rectangle
+from kivy.clock import Clock
+from kivy.uix.scatter import Scatter
+from kivy.uix.effectwidget import EffectWidget, AdvancedEffectBase
 from kivy.properties import NumericProperty, ListProperty
 from random import random
-import os
 
 # Устанавливаем размер окна для тестирования на ПК
-Window.size = (360, 640)
+Window.size = (360, 640)  # Размер экрана, как у смартфона
+
+class HeartAnimation(Scatter):
+    """Виджет для анимированных сердечек"""
+    def __init__(self, **kwargs):
+        super(HeartAnimation, self).__init__(**kwargs)
+        self.size = (50, 50)
+        self.add_widget(Image(source='heart.png', size=(50, 50)))
+
+    def animate(self):
+        # Анимация: сердечко поднимается и исчезает
+        anim = Animation(y=self.y + 400, t='out_quad', duration=2) + Animation(opacity=0, duration=0.5)
+        anim.start(self)
+        anim.bind(on_complete=lambda *args: self.parent.remove_widget(self))
 
 class LoveKittenWidget(FloatLayout):
-    gradient_color = ListProperty([1, 0.6, 0.8, 1])  # Начальный цвет фона
-    kitten_scale = NumericProperty(1.0)  # Для анимации котёнка
+    """Основной виджет приложения"""
+    bg_color = ListProperty([0.9, 0.6, 0.8, 1])  # Фоновый цвет (розовый)
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(LoveKittenWidget, self).__init__(**kwargs)
 
-        # Градиентный фон
+        # Устанавливаем фон
         with self.canvas.before:
-            Color(*self.gradient_color)
-            self.rect = Rectangle(size=self.size, pos=self.pos)
-            self.bind(size=self._update_rect, pos=self._update_rect)
+            Color(*self.bg_color)
+            self.rect = Rectangle(size=Window.size, pos=self.pos)
 
-        # Анимация фона (радужный эффект)
-        Clock.schedule_interval(self.animate_background, 2)
+        # Обновление фона при изменении размера окна
+        self.bind(size=self._update_rect, pos=self._update_rect)
 
-        # Изображение котёнка
-        self.kitten = Image(
-            source='kitten.png',
-            size_hint=(0.5, 0.5),
-            pos_hint={'center_x': 0.5, 'center_y': 0.65}
-        )
-        self.add_widget(self.kitten)
-
-        # Свечение под котёнком
-        with self.kitten.canvas.before:
-            Color(1, 1, 1, 0.3)
-            self.glow = Ellipse(size=(dp(200), dp(200)), pos=(self.kitten.x - dp(50), self.kitten.y - dp(50)))
-            self.kitten.bind(pos=self._update_glow)
-
-        # Анимация котёнка (пульсация)
-        Clock.schedule_interval(self.animate_kitten, 1)
-
-        # Текст
+        # Добавляем текст
         self.label = Label(
-            text="[b][color=ff99cc]Я очень люблю своего котёнка![/color][/b]",
-            font_size=dp(30),
-            pos_hint={'center_x': 0.5, 'center_y': 0.25},
+            text="[b]Я очень сильно люблю своего котёнка![/b]",
+            font_size='24sp',
+            color=(1, 0.5, 0.5, 1),  # Розовый цвет текста
             markup=True,
-            font_name='Roboto' if os.path.exists('Roboto.ttf') else 'default'
+            size_hint=(0.9, 0.2),
+            pos_hint={'center_x': 0.5, 'y': 0.8}
         )
         self.add_widget(self.label)
 
-        # Анимация цвета текста
-        Clock.schedule_interval(self.animate_label, 1.5)
-
-        # Кнопка "Мяу!"
-        self.button = Button(
-            text='Мяу!',
-            size_hint=(0.3, 0.1),
-            pos_hint={'center_x': 0.5, 'center_y': 0.1},
-            background_color=(1, 0.4, 0.8, 1),
-            font_size=dp(20)
+        # Добавляем изображение котёнка
+        self.kitten = Image(
+            source='kitten.png',  # Укажите путь к изображению котёнка
+            size_hint=(0.6, 0.6),
+            pos_hint={'center_x': 0.5, 'center_y': 0.5}
         )
-        self.button.bind(on_press=self.on_button_press)
+        self.add_widget(self.kitten)
+
+        # Добавляем кнопку
+        self.button = Button(
+            text='Показать любовь!',
+            size_hint=(0.4, 0.1),
+            pos_hint={'center_x': 0.5, 'y': 0.1},
+            background_color=(1, 0.4, 0.6, 1),  # Яркий розовый
+            color=(1, 1, 1, 1)
+        )
+        self.button.bind(on_press=self.show_love)
         self.add_widget(self.button)
 
-        # Анимированные сердечки
-        self.hearts = []
-        for _ in range(5):  # Создаём 5 сердечек
-            heart = Image(
-                source='heart.png',
-                size_hint=(0.1, 0.1),
-                pos_hint={'x': random(), 'y': random()},
-                opacity=0
+        # Эффект свечения для кнопки
+        self.effect_widget = EffectWidget()
+        self.effect_widget.add_widget(self.button)
+        self.add_widget(self.effect_widget)
+
+    def _update_rect(self, *args):
+        self.rect.pos = self.pos
+        self.rect.size = self.size
+
+    def show_love(self, instance):
+        """Показывает анимацию сердечек и меняет фон"""
+        # Меняем цвет фона с анимацией
+        new_color = [random(), random(), random(), 1]
+        Animation(bg_color=new_color, duration=1).start(self)
+
+        # Создаём несколько сердечек
+        for _ in range(5):
+            heart = HeartAnimation(
+                pos=(self.center_x - 25 + random() * 50, self.y + 100)
             )
             self.add_widget(heart)
-            self.hearts.append(heart)
-        Clock.schedule_interval(self.animate_hearts, 0.5)
-
-    def _update_rect(self, instance, value):
-        self.rect.pos = instance.pos
-        self.rect.size = instance.size
-
-    def _update_glow(self, instance, value):
-        self.glow.pos = (instance.x - dp(50), instance.y - dp(50))
-
-    def animate_background(self, dt):
-        # Плавная смена цвета фона
-        anim = Animation(gradient_color=[random(), random(), random(), 1], duration=2)
-        anim.start(self)
-
-    def animate_kitten(self, dt):
-        # Пульсация котёнка
-        anim = Animation(kitten_scale=1.1, duration=0.5) + Animation(kitten_scale=1.0, duration=0.5)
-        anim.start(self)
-
-    def animate_label(self, dt):
-        # Смена цвета текста
-        colors = ['ff99cc', '99ccff', 'cc99ff', 'ffcc99']
-        self.label.text = f"[b][color={colors[int(dt % 4)]}]Я очень люблю своего котёнка![/color][/b]"
-
-    def animate_hearts(self, dt):
-        # Анимация сердечек
-        for heart in self.hearts:
-            anim = Animation(
-                pos_hint={'x': random(), 'y': random()},
-                opacity=1,
-                duration=0.5
-            ) + Animation(opacity=0, duration=0.5)
-            anim.start(heart)
-
-    def on_button_press(self, instance):
-        # Эффект нажатия кнопки
-        anim = Animation(size_hint=(0.35, 0.12), duration=0.1) + Animation(size_hint=(0.3, 0.1), duration=0.1)
-        anim.start(self.button)
-        # Опционально: добавьте звук (раскомментируйте, если есть meow.wav)
-        # from kivy.core.audio import SoundLoader
-        # sound = SoundLoader.load('meow.wav')
-        # if sound:
-        #     sound.play()
+            Clock.schedule_once(lambda dt, h=heart: h.animate(), 0.1 * _)
 
 class LoveKittenApp(App):
     def build(self):
