@@ -20,7 +20,7 @@ class HeartAnimation(Scatter):
         super(HeartAnimation, self).__init__(**kwargs)
         self.size = (50, 50)
         # Use text-based heart instead of image
-        self.add_widget(Label(text='♥', font_size='40sp', color=(1, 0, 0, 1)))
+        self.add_widget(Label(text='Люблю тебя💕', font_size='40sp', color=(1, 0, 0, 1)))
 
     def animate(self):
         # Animation: heart rises and fades out
@@ -47,7 +47,7 @@ class LoveKittenWidget(FloatLayout):
 
         # Add text
         self.label = Label(
-            text="[b]Я очень сильно люблю своего котёнка![/b]",
+            text="[b]Я очень сильно \nлюблю своего котёнка![/b]",
             font_size='24sp',
             color=(1, 0.2, 0.4, 1),  # Bright pink text
             markup=True,
@@ -58,7 +58,7 @@ class LoveKittenWidget(FloatLayout):
 
         # Add kitten placeholder (text instead of image)
         self.kitten = Label(
-            text='😺',  # Cat emoji (or replace with image later)
+            text='Сердечко:3',  # Cat emoji (or replace with image later)
             font_size='100sp',
             color=(1, 0.5, 0.7, 1),
             size_hint=(0.6, 0.6),
