@@ -26,12 +26,6 @@ export PATH=$PATH:~/.local/bin/
 
 buildozer android debug deploy run
 
-
-nn@nn-Virtual-Machine:~/PyCharmMiscProject$ sudo apt install -y git zip unzip openjdk-8-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-Note, selecting 'libncurses-dev' instead of 'libncurses5-dev'
-Note, selecting 'libncurses-dev' instead of 'libncursesw5-dev'
-E: Unable to locate package libtinfo5
-
+lsb_release -a
+sudo apt update
+sudo apt install -y git zip unzip openjdk-8-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libffi-dev libssl-dev cmake
