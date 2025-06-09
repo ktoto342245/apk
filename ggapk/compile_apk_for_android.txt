@@ -26,12 +26,37 @@ export PATH=$PATH:~/.local/bin/
 
 buildozer android debug deploy run
 
+ 2. Якщо не хочеш чекати (і впевнений, що це зависло):
+Виконай команду, щоб побачити, який процес блокує:
+
+bash
+Копировать
+Редактировать
+ps aux | grep apt
+А потім завершити його (тільки якщо впевнений!):
+
+bash
+Копировать
+Редактировать
+sudo kill -9 [номер_процесу]
+Наприклад:
+
+bash
+Копировать
+Редактировать
+sudo kill -9 20654
+🔹 3. Після цього:
+Перевір, чи ще є блокування:
+
+bash
+Копировать
+Редактировать
+sudo rm /var/lib/dpkg/lock-frontend
+sudo rm /var/cache/apt/archives/lock
+А потім:
+
+bash
+Копировать
+Редактировать
+sudo dpkg --configure -a
 sudo apt update
-sudo apt install -y git zip unzip openjdk-11-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev libffi-dev libssl-dev cmake python3-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev fonts-noto
-
-
-sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu focal main universe"
-sudo apt update
-sudo apt install -y libtinfo5
-
-dpkg -l | grep libtinfo
