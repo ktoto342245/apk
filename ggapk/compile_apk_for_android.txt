@@ -60,3 +60,14 @@ bash
 Редактировать
 sudo dpkg --configure -a
 sudo apt update
+
+
+
+
+
+
+
+nn@nn-Virtual-Machine:~/PyCharmMiscProject$ ps aux | grep apt
+root       20654  0.7  1.9 244032 139164 ?       SNl  17:07   0:01 /usr/bin/python3 /usr/sbin/aptd
+nn         25670  0.8  1.0 137200 76524 ?        RN   17:10   0:01 /usr/bin/python3 /usr/lib/update-notifier/apt-check
+nn         35214  0.0  0.0  17812  2256 pts/0    S+   17:12   0:00 grep --color=auto apt
