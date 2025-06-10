@@ -20,7 +20,7 @@ class HeartAnimation(Scatter):
         super(HeartAnimation, self).__init__(**kwargs)
         self.size = (50, 50)
         # Use text-based heart instead of image
-        self.add_widget(Label(text='Люблю тебя💕', font_size='40sp', color=(1, 0, 0, 1)))
+        self.add_widget(Label(text='Люблю тебя', font_size='40sp', color=(1, 0, 0, 1)))
 
     def animate(self):
         # Animation: heart rises and fades out
