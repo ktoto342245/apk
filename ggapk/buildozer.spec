@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = My Mobile Calculator
+title = I love you
 
 # (str) Package name
-package.name = mymobilecalc
+package.name = Iloveyou
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.wiseplat
