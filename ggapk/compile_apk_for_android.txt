@@ -26,30 +26,3 @@ export PATH=$PATH:~/.local/bin/
 
 buildozer android debug deploy run
 
-❗ Якщо не хочеш чекати — можна зупинити процеси вручну (небажано, але можливо):
-bash
-Копировать
-Редактировать
-sudo kill -9 20654
-sudo kill -9 25670
-Після цього виконай:
-
-bash
-Копировать
-Редактировать
-sudo rm /var/lib/dpkg/lock-frontend
-sudo dpkg --configure -a
-Після цього знову можеш запускати:
-
-bash
-Копировать
-Редактировать
-sudo apt update
-sudo apt install <що_тобі_потрібно>
-Якщо не впевнений, краще надішли, що ти намагаєшся встановити — допоможу точніше.
-
-
-sudo apt update
-sudo apt install -y build-essential python3-pip git zip unzip openjdk-17-jdk
-pip install --upgrade pip
-pip install buildozer cython
